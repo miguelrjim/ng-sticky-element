@@ -1,6 +1,6 @@
 /**
  * ng-sticky-element v0.1.0 (https://github.com/afklm/ng-sticky-element)
- * Copyright 2015 - KLM Royal Dutch Airlines
+ * Copyright 2016 - KLM Royal Dutch Airlines
  * Licensed under MIT
  */
 'use strict';
@@ -23,19 +23,25 @@
       link: function link(scope, $element, attrs) {
         $element.addClass(DEFAULT_CLASS);
 
-        var stickTo = attrs.afklStickyElement === BOTTOM ? BOTTOM : TOP;
-        var intervalID = null;
-        var body = $document[0].body;
-        var lastBodyHeight = body.offsetHeight;
-        var elPos = null;
-        var isOnStickyMode = false;
-        var element = $element[0];
-        var $win = angular.element($window);
-        var mediaQuery = attrs.afklStickyElementMq;
-        var offset = attrs.afklStickyElementOffset ? parseInt(attrs.afklStickyElementOffset) : 0;
+        var stickTo = attrs.afklStickyElement === BOTTOM ? BOTTOM : TOP,
+            intervalID = null,
+            body = $document[0].body,
+            lastBodyHeight = body.offsetHeight,
+            elPos = null,
+            isOnStickyMode = false,
+            element = $element[0],
+            $win = angular.element($window),
+            mediaQuery = attrs.afklStickyElementMq,
+            offset = attrs.afklStickyElementOffset ? parseInt(attrs.afklStickyElementOffset) : 0,
+            shouldPoll = !!scope.$eval(attrs.afklStickyElementPolling || 'true'),
+            id = attrs.afklStickyElementId,
+            watchFn;
 
-        $win.bind('blur', stopPollingContentHeight);
-        $win.bind('focus', startPollingContentHeight);
+        if (shouldPoll) {
+          $win.bind('blur', stopPollingContentHeight);
+          $win.bind('focus', startPollingContentHeight);
+        }
+        if (id) watchFn = scope.$on('afklStickyElement:' + id, updateState);
         $win.bind('scroll', updateState);
         $win.bind('resize', updateState);
 
@@ -47,7 +53,7 @@
           updateState();
           $element.removeClass(VISIBLE_CLASS);
 
-          startPollingContentHeight();
+          if (shouldPoll) startPollingContentHeight();
         }, 0);
 
         function startPollingContentHeight() {
@@ -96,6 +102,7 @@
         function clearStickiness() {
           if (isOnStickyMode) {
             isOnStickyMode = false;
+            $element.css('width', null);
             $element.removeClass(STICKY_CLASS).css(stickTo, null);
           }
         }
@@ -103,14 +110,18 @@
         function addStickiness() {
           if (!isOnStickyMode) {
             isOnStickyMode = true;
+            $element.css('width', $element[0].offsetWidth + 'px');
             $element.addClass(STICKY_CLASS).css(stickTo, offset + 'px');
           }
         }
 
         $element.on('$destroy', function () {
-          stopPollingContentHeight();
-          $win.unbind('blur', stopPollingContentHeight);
-          $win.unbind('focus', startPollingContentHeight);
+          if (id) watchFn();
+          if (shouldPoll) {
+            stopPollingContentHeight();
+            $win.unbind('blur', stopPollingContentHeight);
+            $win.unbind('focus', startPollingContentHeight);
+          }
           $win.unbind('scroll', updateState);
           $win.unbind('resize', updateState);
         });
