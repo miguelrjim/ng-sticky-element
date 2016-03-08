@@ -3,4 +3,4 @@
  * Copyright 2016 - KLM Royal Dutch Airlines
  * Licensed under MIT
  */
-.afkl-sticky-element--sticky{position:fixed!important}.afkl-sticky-element--visible{display:block!important}.afkl-sticky-element--visible.ng-hide,.afkl-sticky-element--visible.ng-hide:not(.ng-hide-animate){display:block!important;visibility:hidden!important}
+.afkl-sticky-element--sticky{position:fixed!important;top:0;max-height:100%;overflow-y:scroll}.afkl-sticky-element--visible{display:block!important}.afkl-sticky-element--visible.ng-hide,.afkl-sticky-element--visible.ng-hide:not(.ng-hide-animate){display:block!important;visibility:hidden!important}

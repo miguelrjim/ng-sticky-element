@@ -99,7 +99,7 @@
           if (isOnStickyMode) {
             isOnStickyMode = false;
             $element.css('width', null);
-            $element.removeClass(STICKY_CLASS).css(stickTo, null);
+            $element.removeClass(STICKY_CLASS).css('padding-'+stickTo, null);
           }
         }
 
@@ -107,7 +107,7 @@
           if (!isOnStickyMode) {
             isOnStickyMode = true;
             $element.css('width', $element[0].offsetWidth + 'px');
-            $element.addClass(STICKY_CLASS).css(stickTo, offset + 'px');
+            $element.addClass(STICKY_CLASS).css('padding-'+stickTo, offset + 'px');
           }
         }
 

@@ -4,7 +4,10 @@
  * Licensed under MIT
  */
 .afkl-sticky-element--sticky {
-  position: fixed !important; }
+  position: fixed !important;
+  top: 0;
+  max-height: 100%;
+  overflow-y: scroll; }
 
 .afkl-sticky-element--visible {
   display: block !important; }
