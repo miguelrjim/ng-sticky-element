@@ -6,7 +6,7 @@ $module: 'afkl-sticky-element';
     position: fixed !important;
     top: 0;
     max-height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   &--visible {
